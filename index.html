@@ -1,0 +1,1612 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>napkimcuonggiare — Cổng Nạp Kim Cương Free Fire</title>
+  <style>
+    :root {
+      --bg-dark: #090b10;
+      --bg-panel: #111520;
+      --bg-card: #161b29;
+      --bg-card-hover: #1d2436;
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --accent-orange: #ff7a00;
+      --accent-gold: #ffb800;
+      --accent-glow: rgba(255, 138, 0, 0.28);
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --success: #10b981;
+      --danger: #ef4444;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      height: 100%;
+      background-color: var(--bg-dark);
+      color: var(--text-primary);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      overflow-x: hidden;
+    }
+
+    @media (min-width: 1024px) {
+      html, body {
+        overflow: hidden;
+      }
+    }
+
+    .app-shell {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background:
+        radial-gradient(circle at 15% 0%, rgba(255, 122, 0, 0.14), transparent 42%),
+        radial-gradient(circle at 88% 12%, rgba(255, 184, 0, 0.09), transparent 38%),
+        var(--bg-dark);
+    }
+
+    @media (min-width: 1024px) {
+      .app-shell {
+        height: 100vh;
+      }
+    }
+
+    /* Header */
+    header {
+      height: 52px;
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-subtle);
+      background: rgba(11, 14, 23, 0.94);
+      flex-shrink: 0;
+      gap: 12px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+
+    .brand-badge {
+      width: 32px;
+      height: 32px;
+      border-radius: 9px;
+      background: linear-gradient(135deg, #0284c7, #38bdf8);
+      border: 1px solid rgba(125, 211, 252, 0.55);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 14px rgba(14, 165, 233, 0.42);
+    }
+
+    .brand-title {
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: 0.3px;
+      color: var(--text-primary);
+      text-transform: lowercase;
+    }
+
+    .brand-title span {
+      background: linear-gradient(90deg, #38bdf8, #7dd3fc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* Header Account & Balance Controls */
+    .header-account-area {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: nowrap;
+    }
+
+    .wallet-pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 8px 4px 11px;
+      border-radius: 999px;
+      background: rgba(255, 184, 0, 0.08);
+      border: 1px solid rgba(255, 184, 0, 0.28);
+      font-size: 12px;
+    }
+
+    .wallet-label {
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    .wallet-amount {
+      color: var(--accent-gold);
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .btn-topup-wallet {
+      padding: 3px 9px;
+      border-radius: 999px;
+      border: none;
+      background: linear-gradient(135deg, var(--accent-orange), var(--accent-gold));
+      color: #090b10;
+      font-size: 11px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform 0.14s ease, filter 0.14s ease;
+    }
+
+    .btn-topup-wallet:hover {
+      filter: brightness(1.08);
+      transform: translateY(-1px);
+    }
+
+    .account-chip {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 4px 11px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-primary);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: border-color 0.15s ease, background 0.15s ease;
+    }
+
+    .account-chip:hover {
+      border-color: rgba(255, 184, 0, 0.45);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .account-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--success);
+      box-shadow: 0 0 6px rgba(16, 185, 129, 0.8);
+    }
+
+    .btn-logout {
+      padding: 5px 10px;
+      border-radius: 8px;
+      border: 1px solid var(--border-subtle);
+      background: rgba(239, 68, 68, 0.1);
+      color: #fca5a5;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .btn-logout:hover {
+      background: rgba(239, 68, 68, 0.2);
+      border-color: rgba(239, 68, 68, 0.45);
+    }
+
+    /* Main Workspace Grid */
+    main {
+      flex: 1;
+      min-height: 0;
+      padding: 12px 20px 14px;
+      display: grid;
+      grid-template-columns: 1fr 315px;
+      gap: 16px;
+      max-width: 1380px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    @media (max-width: 1023px) {
+      main {
+        grid-template-columns: 1fr;
+        padding: 12px;
+      }
+      .wallet-label {
+        display: none;
+      }
+    }
+
+    .left-column {
+      display: flex;
+      flex-direction: column;
+      gap: 11px;
+      min-height: 0;
+    }
+
+    /* Step 1: ID + Profile Card + Inline Balance Box */
+    .step1-card {
+      background: var(--bg-panel);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 9px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-shrink: 0;
+      flex-wrap: wrap;
+    }
+
+    .step-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .step-num {
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      background: linear-gradient(135deg, var(--accent-orange), var(--accent-gold));
+      color: #090b10;
+      font-weight: 800;
+      font-size: 12px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .step-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-primary);
+      white-space: nowrap;
+    }
+
+    .id-controls {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex: 1;
+      min-width: 240px;
+      max-width: 400px;
+    }
+
+    .id-input {
+      flex: 1;
+      min-width: 120px;
+      height: 33px;
+      padding: 0 10px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: #0b0e17;
+      color: var(--text-primary);
+      font-size: 12.5px;
+      font-weight: 600;
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .id-input:focus {
+      border-color: var(--accent-orange);
+      box-shadow: 0 0 0 2px rgba(255, 122, 0, 0.2);
+    }
+
+    .btn-sample {
+      height: 33px;
+      padding: 0 9px;
+      border-radius: 8px;
+      border: 1px solid var(--border-subtle);
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-secondary);
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s ease;
+    }
+
+    .btn-sample:hover {
+      color: var(--text-primary);
+      border-color: rgba(255, 255, 255, 0.25);
+      background: rgba(255, 255, 255, 0.09);
+    }
+
+    .btn-check {
+      height: 33px;
+      padding: 0 12px;
+      border-radius: 8px;
+      border: none;
+      background: linear-gradient(135deg, var(--accent-orange), var(--accent-gold));
+      color: #090b10;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: transform 0.14s ease, filter 0.14s ease;
+    }
+
+    .btn-check:hover {
+      filter: brightness(1.08);
+      transform: translateY(-1px);
+    }
+
+    /* Verified UID badge card */
+    .player-verified-card {
+      display: none;
+      align-items: center;
+      gap: 9px;
+      padding: 5px 10px 5px 7px;
+      border-radius: 9px;
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      flex-shrink: 0;
+    }
+
+    .player-verified-card.active {
+      display: flex;
+    }
+
+    .player-avatar-box {
+      width: 26px;
+      height: 26px;
+      border-radius: 7px;
+      background: linear-gradient(135deg, rgba(255, 122, 0, 0.25), rgba(255, 184, 0, 0.15));
+      border: 1px solid rgba(255, 184, 0, 0.45);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .player-uid-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 800;
+      color: #6ee7b7;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .region-tag {
+      font-size: 9.5px;
+      font-weight: 800;
+      padding: 1px 5px;
+      border-radius: 4px;
+      background: rgba(255, 184, 0, 0.2);
+      color: var(--accent-gold);
+      border: 1px solid rgba(255, 184, 0, 0.4);
+    }
+
+    .btn-change-id {
+      padding: 3px 8px;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text-secondary);
+      font-size: 10.5px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.14s ease;
+    }
+
+    .btn-change-id:hover {
+      color: var(--text-primary);
+      border-color: rgba(255, 184, 0, 0.45);
+    }
+
+    .id-status {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      white-space: nowrap;
+    }
+
+    .id-status.hidden {
+      display: none;
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--text-muted);
+      flex-shrink: 0;
+    }
+
+    .status-dot.verified {
+      background: var(--success);
+      box-shadow: 0 0 8px rgba(16, 185, 129, 0.75);
+    }
+
+    .status-dot.error {
+      background: var(--danger);
+    }
+
+    /* Balance Inline Box right next to Check ID */
+    .inline-balance-box {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 5px 10px;
+      border-radius: 9px;
+      background: #0b0e17;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      flex-shrink: 0;
+    }
+
+    .inline-balance-label {
+      font-size: 11px;
+      color: var(--text-secondary);
+      font-weight: 600;
+    }
+
+    .inline-balance-val {
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--accent-gold);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .balance-badge {
+      font-size: 10px;
+      font-weight: 800;
+      padding: 2px 7px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+
+    .balance-badge.ok {
+      background: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.35);
+    }
+
+    .balance-badge.low {
+      background: rgba(239, 68, 68, 0.16);
+      color: #f87171;
+      border: 1px solid rgba(239, 68, 68, 0.4);
+    }
+
+    /* Step 2: Packages Grid */
+    .step2-panel {
+      flex: 1;
+      min-height: 0;
+      background: var(--bg-panel);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 11px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .step2-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+
+    .step2-hint {
+      font-size: 11.5px;
+      color: var(--text-muted);
+    }
+
+    .packages-grid {
+      flex: 1;
+      min-height: 0;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-template-rows: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    @media (max-width: 768px) {
+      .packages-grid {
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: auto;
+      }
+    }
+
+    .pkg-card {
+      position: relative;
+      background: var(--bg-card);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 11px;
+      padding: 9px 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      cursor: pointer;
+      transition: transform 0.14s ease, border-color 0.14s ease, background 0.14s ease, box-shadow 0.14s ease;
+      user-select: none;
+    }
+
+    .pkg-card:hover {
+      background: var(--bg-card-hover);
+      border-color: rgba(255, 184, 0, 0.45);
+      transform: translateY(-2px);
+    }
+
+    .pkg-card.selected {
+      background: linear-gradient(160deg, rgba(255, 122, 0, 0.18), rgba(255, 184, 0, 0.08));
+      border-color: var(--accent-gold);
+      box-shadow: 0 0 0 1px var(--accent-gold), 0 6px 18px rgba(255, 138, 0, 0.22);
+    }
+
+    .pkg-badge {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 0.4px;
+      padding: 2px 6px;
+      border-radius: 999px;
+      text-transform: uppercase;
+    }
+
+    .badge-hot {
+      background: rgba(255, 82, 82, 0.2);
+      color: #ff7b7b;
+      border: 1px solid rgba(255, 82, 82, 0.4);
+    }
+
+    .badge-best {
+      background: rgba(255, 184, 0, 0.2);
+      color: var(--accent-gold);
+      border: 1px solid rgba(255, 184, 0, 0.45);
+    }
+
+    .badge-pass {
+      background: rgba(56, 189, 248, 0.18);
+      color: #7dd3fc;
+      border: 1px solid rgba(56, 189, 248, 0.4);
+    }
+
+    .pkg-icon {
+      width: 28px;
+      height: 28px;
+      margin-bottom: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .pkg-amount {
+      font-size: 13.5px;
+      font-weight: 800;
+      color: var(--text-primary);
+      line-height: 1.2;
+    }
+
+    .pkg-bonus {
+      font-size: 10.5px;
+      font-weight: 700;
+      color: #34d399;
+      margin-top: 2px;
+      min-height: 14px;
+    }
+
+    .pkg-bonus.muted {
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    .pkg-price {
+      margin-top: 5px;
+      font-size: 12.5px;
+      font-weight: 800;
+      color: var(--accent-gold);
+    }
+
+    /* Right Summary Column */
+    .summary-panel {
+      background: var(--bg-panel);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 0;
+    }
+
+    .summary-heading {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--text-primary);
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .summary-rows {
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+      margin: 10px 0;
+    }
+
+    .summary-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 12.5px;
+    }
+
+    .summary-row .label {
+      color: var(--text-secondary);
+    }
+
+    .summary-row .val {
+      font-weight: 700;
+      color: var(--text-primary);
+      text-align: right;
+    }
+
+    .summary-row .val.highlight {
+      color: #34d399;
+    }
+
+    .summary-row .val.gold {
+      color: var(--accent-gold);
+    }
+
+    .summary-divider {
+      height: 1px;
+      background: var(--border-subtle);
+      margin: 6px 0;
+    }
+
+    .total-box {
+      background: rgba(255, 122, 0, 0.08);
+      border: 1px solid rgba(255, 184, 0, 0.25);
+      border-radius: 10px;
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .total-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-secondary);
+    }
+
+    .total-price {
+      font-size: 17px;
+      font-weight: 900;
+      color: var(--accent-gold);
+    }
+
+    .btn-submit {
+      width: 100%;
+      height: 40px;
+      border-radius: 10px;
+      border: none;
+      background: linear-gradient(135deg, var(--accent-orange), var(--accent-gold));
+      color: #090b10;
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing: 0.4px;
+      cursor: pointer;
+      box-shadow: 0 4px 16px var(--accent-glow);
+      transition: transform 0.14s ease, filter 0.14s ease;
+    }
+
+    .btn-submit:hover {
+      filter: brightness(1.08);
+      transform: translateY(-1px);
+    }
+
+    .btn-submit:active {
+      transform: translateY(0);
+    }
+
+    .summary-note {
+      margin-top: 8px;
+      font-size: 11px;
+      color: var(--text-muted);
+      text-align: center;
+      line-height: 1.35;
+    }
+
+    /* Toast Notification */
+    .toast-container {
+      position: fixed;
+      top: 62px;
+      right: 20px;
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      pointer-events: none;
+    }
+
+    .toast {
+      padding: 9px 14px;
+      border-radius: 9px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #fff;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+      animation: toastSlideIn 0.2s ease;
+    }
+
+    .toast.success {
+      background: #059669;
+      border: 1px solid #34d399;
+    }
+
+    .toast.error {
+      background: #dc2626;
+      border: 1px solid #f87171;
+    }
+
+    @keyframes toastSlideIn {
+      from { opacity: 0; transform: translateX(16px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    /* Modals (Receipt, Top-up Wallet, Login) */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(4, 6, 11, 0.78);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+      padding: 16px;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal-card {
+      width: 100%;
+      max-width: 400px;
+      background: var(--bg-panel);
+      border: 1px solid rgba(255, 184, 0, 0.35);
+      border-radius: 14px;
+      padding: 18px 20px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.65);
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .modal-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--accent-gold);
+    }
+
+    .modal-close {
+      width: 26px;
+      height: 26px;
+      border-radius: 7px;
+      border: 1px solid var(--border-subtle);
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-secondary);
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .modal-close:hover {
+      color: var(--text-primary);
+    }
+
+    .receipt-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin: 12px 0 16px;
+      font-size: 12.5px;
+    }
+
+    .receipt-item {
+      display: flex;
+      justify-content: space-between;
+      padding-bottom: 6px;
+      border-bottom: 1px dashed rgba(255, 255, 255, 0.08);
+    }
+
+    .receipt-item span:first-child {
+      color: var(--text-secondary);
+    }
+
+    .receipt-item span:last-child {
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .topup-presets {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      margin: 12px 0 14px;
+    }
+
+    .preset-btn {
+      padding: 9px 10px;
+      border-radius: 9px;
+      border: 1px solid var(--border-subtle);
+      background: var(--bg-card);
+      color: var(--text-primary);
+      font-size: 12.5px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.14s ease;
+    }
+
+    .preset-btn:hover {
+      border-color: var(--accent-gold);
+      background: rgba(255, 184, 0, 0.12);
+      color: var(--accent-gold);
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      margin-bottom: 11px;
+    }
+
+    .form-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-secondary);
+    }
+
+    .form-input {
+      height: 36px;
+      padding: 0 11px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: #0b0e17;
+      color: var(--text-primary);
+      font-size: 13px;
+      font-weight: 600;
+      outline: none;
+    }
+
+    .form-input:focus {
+      border-color: var(--accent-orange);
+    }
+
+    .form-error {
+      font-size: 11.5px;
+      color: #f87171;
+      font-weight: 600;
+      min-height: 16px;
+      margin-bottom: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div id="toastContainer" class="toast-container"></div>
+
+  <div class="app-shell">
+    <header>
+      <div class="brand">
+        <div class="brand-badge" aria-hidden="true">
+          <svg width="19" height="19" viewBox="0 0 28 28" fill="none">
+            <polygon points="14,2 25,11 14,26 3,11" fill="#0EA5E9"/>
+            <polygon points="14,2 25,11 14,14" fill="#E0F2FE"/>
+            <polygon points="14,2 3,11 14,14" fill="#7DD3FC"/>
+            <polygon points="14,14 25,11 14,26" fill="#0369A1"/>
+          </svg>
+        </div>
+        <div class="brand-title">napkimcuong<span>giare</span></div>
+      </div>
+
+      <div class="header-account-area">
+        <div class="wallet-pill">
+          <span class="wallet-label">Số dư:</span>
+          <span class="wallet-amount" id="headerBalanceText">13.300.000đ</span>
+          <button type="button" class="btn-topup-wallet" id="openTopupBtn">+ Nạp thêm</button>
+        </div>
+
+        <button type="button" class="account-chip" id="accountChipBtn" title="Thông tin tài khoản">
+          <span class="account-dot" id="accountDot"></span>
+          <span id="headerAccountName">Minhduc1</span>
+        </button>
+
+        <button type="button" class="btn-logout" id="logoutOrLoginBtn">Đăng xuất</button>
+      </div>
+    </header>
+
+    <!-- Main 2-Column Content -->
+    <main>
+      <div class="left-column">
+        <!-- Step 1: Player ID + Napthe.vn Character Profile Card + Inline Balance Box -->
+        <section class="step1-card" aria-label="Bước 1 Nhập ID người chơi">
+          <div class="step-header">
+            <span class="step-num">1</span>
+            <span class="step-title">ID Người chơi</span>
+          </div>
+
+          <div class="id-controls" id="idInputRow">
+            <input
+              type="text"
+              id="playerIdInput"
+              class="id-input"
+              placeholder="Nhập UID người chơi Free Fire"
+              maxlength="14"
+              inputmode="numeric"
+            />
+            <button type="button" class="btn-sample" id="fillSampleBtn">ID mẫu</button>
+            <button type="button" class="btn-check" id="checkIdBtn">Xác nhận ID</button>
+          </div>
+
+          <div class="player-verified-card" id="playerVerifiedCard">
+            <div class="player-avatar-box" aria-hidden="true">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+                <path d="M12 2L20 9.5L12 22L4 9.5L12 2Z" fill="#FFB800"/>
+                <path d="M12 6L16.5 10.2L12 17.5L7.5 10.2L12 6Z" fill="#FF7A00"/>
+              </svg>
+            </div>
+            <div class="player-uid-row">
+              <span class="region-tag">VN</span>
+              <span>ID: <span id="verifiedUidDisplay">—</span></span>
+            </div>
+            <button type="button" class="btn-change-id" id="changeIdBtn">Đổi ID</button>
+          </div>
+
+          <div class="inline-balance-box" id="inlineBalanceBox">
+            <span class="inline-balance-label">Số dư:</span>
+            <span class="inline-balance-val" id="inlineBalanceVal">13.300.000đ</span>
+            <span class="balance-badge ok" id="balanceStatusBadge">Đủ số dư</span>
+          </div>
+
+          <div class="id-status" id="idStatusBox">
+            <span class="status-dot" id="statusDot"></span>
+            <span id="statusText">Chưa kiểm tra ID</span>
+          </div>
+        </section>
+
+        <!-- Step 2: Select Diamond / Pass Package -->
+        <section class="step2-panel" aria-label="Bước 2 Chọn gói Kim Cương">
+          <div class="step2-top">
+            <div class="step-header">
+              <span class="step-num">2</span>
+              <span class="step-title">Chọn gói Kim Cương &amp; Thẻ thành viên</span>
+            </div>
+            <span class="step2-hint">Nhấn vào gói để chọn</span>
+          </div>
+
+          <div class="packages-grid" id="packagesGrid">
+            <!-- 1. 230 KC -->
+            <div class="pkg-card selected" data-id="kc-230" data-name="230 Kim Cương" data-diamonds="230" data-bonus="23" data-price="55000">
+              <div class="pkg-icon">
+                <svg width="26" height="26" viewBox="0 0 28 28" fill="none">
+                  <polygon points="14,2 25,11 14,26 3,11" fill="#38BDF8"/>
+                  <polygon points="14,2 25,11 14,14" fill="#BAE6FD"/>
+                  <polygon points="14,2 3,11 14,14" fill="#7DD3FC"/>
+                  <polygon points="14,14 25,11 14,26" fill="#0284C7"/>
+                </svg>
+              </div>
+              <div class="pkg-amount">230 Kim Cương</div>
+              <div class="pkg-bonus">+23 KC</div>
+              <div class="pkg-price">55.000đ</div>
+            </div>
+
+            <!-- 2. 580 KC -->
+            <div class="pkg-card" data-id="kc-580" data-name="580 Kim Cương" data-diamonds="580" data-bonus="58" data-price="135000">
+              <div class="pkg-icon">
+                <svg width="26" height="26" viewBox="0 0 28 28" fill="none">
+                  <polygon points="14,2 25,11 14,26 3,11" fill="#0EA5E9"/>
+                  <polygon points="14,2 25,11 14,14" fill="#BAE6FD"/>
+                  <polygon points="14,2 3,11 14,14" fill="#7DD3FC"/>
+                  <polygon points="14,14 25,11 14,26" fill="#0369A1"/>
+                </svg>
+              </div>
+              <div class="pkg-amount">580 Kim Cương</div>
+              <div class="pkg-bonus">+58 KC</div>
+              <div class="pkg-price">135.000đ</div>
+            </div>
+
+            <!-- 3. 1.180 KC (HOT) -->
+            <div class="pkg-card" data-id="kc-1180" data-name="1.180 Kim Cương" data-diamonds="1180" data-bonus="118" data-price="270000">
+              <span class="pkg-badge badge-hot">HOT</span>
+              <div class="pkg-icon">
+                <svg width="26" height="26" viewBox="0 0 28 28" fill="none">
+                  <polygon points="14,2 25,11 14,26 3,11" fill="#38BDF8"/>
+                  <polygon points="14,2 25,11 14,14" fill="#E0F2FE"/>
+                  <polygon points="14,2 3,11 14,14" fill="#7DD3FC"/>
+                  <polygon points="14,14 25,11 14,26" fill="#0284C7"/>
+                </svg>
+              </div>
+              <div class="pkg-amount">1.180 Kim Cương</div>
+              <div class="pkg-bonus">+118 KC</div>
+              <div class="pkg-price">270.000đ</div>
+            </div>
+
+            <!-- 4. 2.400 KC -->
+            <div class="pkg-card" data-id="kc-2400" data-name="2.400 Kim Cương" data-diamonds="2400" data-bonus="240" data-price="540000">
+              <div class="pkg-icon">
+                <svg width="26" height="26" viewBox="0 0 28 28" fill="none">
+                  <polygon points="14,2 25,11 14,26 3,11" fill="#0EA5E9"/>
+                  <polygon points="14,2 25,11 14,14" fill="#BAE6FD"/>
+                  <polygon points="14,2 3,11 14,14" fill="#7DD3FC"/>
+                  <polygon points="14,14 25,11 14,26" fill="#0369A1"/>
+                </svg>
+              </div>
+              <div class="pkg-amount">2.400 Kim Cương</div>
+              <div class="pkg-bonus">+240 KC</div>
+              <div class="pkg-price">540.000đ</div>
+            </div>
+
+            <!-- 5. 6.100 KC (BEST VALUE) -->
+            <div class="pkg-card" data-id="kc-6100" data-name="6.100 Kim Cương" data-diamonds="6100" data-bonus="610" data-price="1350000">
+              <span class="pkg-badge badge-best">BEST VALUE</span>
+              <div class="pkg-icon">
+                <svg width="26" height="26" viewBox="0 0 28 28" fill="none">
+                  <polygon points="14,1.5 26,11 14,26.5 2,11" fill="#0EA5E9"/>
+                  <polygon points="14,1.5 26,11 14,14" fill="#E0F2FE"/>
+                  <polygon points="14,1.5 2,11 14,14" fill="#7DD3FC"/>
+                  <polygon points="14,14 26,11 14,26.5" fill="#0284C7"/>
+                </svg>
+              </div>
+              <div class="pkg-amount">6.100 Kim Cương</div>
+              <div class="pkg-bonus">+610 KC</div>
+              <div class="pkg-price">1.350.000đ</div>
+            </div>
+
+            <!-- 6. Thẻ Tuần -->
+            <div class="pkg-card" data-id="pass-week" data-name="Thẻ Tuần" data-diamonds="450" data-bonus="0" data-price="45000">
+              <span class="pkg-badge badge-pass">THẺ</span>
+              <div class="pkg-icon">
+                <svg width="26" height="26" viewBox="0 0 28 28" fill="none">
+                  <rect x="4" y="6" width="20" height="16" rx="3" fill="#6366F1"/>
+                  <rect x="7" y="9" width="14" height="3" rx="1.5" fill="#C7D2FE"/>
+                  <circle cx="9.5" cy="16.5" r="2" fill="#FBBF24"/>
+                </svg>
+              </div>
+              <div class="pkg-amount">Thẻ Tuần</div>
+              <div class="pkg-bonus muted">450 KC (7 ngày)</div>
+              <div class="pkg-price">45.000đ</div>
+            </div>
+
+            <!-- 7. Thẻ Tháng -->
+            <div class="pkg-card" data-id="pass-month" data-name="Thẻ Tháng" data-diamonds="2600" data-bonus="0" data-price="220000">
+              <span class="pkg-badge badge-pass">THẺ</span>
+              <div class="pkg-icon">
+                <svg width="26" height="26" viewBox="0 0 28 28" fill="none">
+                  <rect x="4" y="6" width="20" height="16" rx="3" fill="#A855F7"/>
+                  <rect x="7" y="9" width="14" height="3" rx="1.5" fill="#F3E8FF"/>
+                  <circle cx="9.5" cy="16.5" r="2" fill="#FBBF24"/>
+                </svg>
+              </div>
+              <div class="pkg-amount">Thẻ Tháng</div>
+              <div class="pkg-bonus muted">2.600 KC (30 ngày)</div>
+              <div class="pkg-price">220.000đ</div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- Right Order Summary -->
+      <aside class="summary-panel" aria-label="Tóm tắt đơn hàng">
+        <div>
+          <div class="summary-heading">
+            <span>Tóm tắt đơn hàng</span>
+          </div>
+
+          <div class="summary-rows">
+            <div class="summary-row">
+              <span class="label">Tài khoản ví:</span>
+              <span class="val" id="summaryAccount">Minhduc1</span>
+            </div>
+            <div class="summary-row">
+              <span class="label">Số dư hiện tại:</span>
+              <span class="val gold" id="summaryBalance">13.300.000đ</span>
+            </div>
+            <div class="summary-row">
+              <span class="label">ID Player:</span>
+              <span class="val" id="summaryUid">Chưa nhập</span>
+            </div>
+            <div class="summary-row">
+              <span class="label">Gói đã chọn:</span>
+              <span class="val" id="summaryPkg">230 Kim Cương</span>
+            </div>
+            <div class="summary-row">
+              <span class="label">Khuyến mãi:</span>
+              <span class="val highlight" id="summaryBonus">+23 KC</span>
+            </div>
+          </div>
+
+          <div class="summary-divider"></div>
+        </div>
+
+        <div>
+          <div class="total-box">
+            <span class="total-label">Tổng thanh toán</span>
+            <span class="total-price" id="summaryTotal">55.000đ</span>
+          </div>
+
+          <button type="button" class="btn-submit" id="confirmTopupBtn">XÁC NHẬN NẠP NGAY</button>
+          <p class="summary-note">Kim cương sẽ cộng trực tiếp từ số dư tài khoản vào UID sau khi xác nhận.</p>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <!-- Receipt Modal -->
+  <div class="modal-backdrop" id="receiptModal" role="dialog" aria-modal="true" aria-labelledby="receiptTitle">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 class="modal-title" id="receiptTitle">NẠP KIM CƯƠNG THÀNH CÔNG</h2>
+        <button type="button" class="modal-close" id="closeReceiptBtn" aria-label="Đóng">&times;</button>
+      </div>
+      <div class="receipt-list" id="receiptDetails"></div>
+      <button type="button" class="btn-submit" id="doneReceiptBtn">HOÀN TẤT</button>
+    </div>
+  </div>
+
+  <!-- Top-up Wallet Modal -->
+  <div class="modal-backdrop" id="topupModal" role="dialog" aria-modal="true" aria-labelledby="topupTitle">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 class="modal-title" id="topupTitle">NẠP THÊM SỐ DƯ TÀI KHOẢN</h2>
+        <button type="button" class="modal-close" id="closeTopupBtn" aria-label="Đóng">&times;</button>
+      </div>
+      <p style="font-size:12px; color:var(--text-secondary);">Chọn mệnh giá nhanh để cộng thêm vào tài khoản <strong id="topupTargetAccount" style="color:var(--text-primary);">Minhduc1</strong>:</p>
+      <div class="topup-presets">
+        <button type="button" class="preset-btn" data-add="100000">+100.000đ</button>
+        <button type="button" class="preset-btn" data-add="500000">+500.000đ</button>
+        <button type="button" class="preset-btn" data-add="1000000">+1.000.000đ</button>
+        <button type="button" class="preset-btn" data-add="5000000">+5.000.000đ</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Login / Switch Account Modal -->
+  <div class="modal-backdrop" id="loginModal" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 class="modal-title" id="loginTitle">ĐĂNG NHẬP TÀI KHOẢN</h2>
+        <button type="button" class="modal-close" id="closeLoginBtn" aria-label="Đóng">&times;</button>
+      </div>
+      <form id="loginForm">
+        <div class="form-group">
+          <label class="form-label" for="loginUserInput">Tên tài khoản</label>
+          <input type="text" id="loginUserInput" class="form-input" placeholder="Nhập tên tài khoản (VD: Minhduc1)" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="loginPassInput">Mật khẩu</label>
+          <input type="password" id="loginPassInput" class="form-input" placeholder="Nhập mật khẩu" required />
+        </div>
+        <div class="form-error" id="loginError"></div>
+        <button type="submit" class="btn-submit">ĐĂNG NHẬP</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const SAMPLE_UIDS = [
+        "1849203841",
+        "2938475610",
+        "7462819053",
+        "123456789",
+        "987654321"
+      ];
+
+      // Pre-configured account Minhduc1 (password: 1, balance: 13.300.000đ)
+      const accounts = {
+        "Minhduc1": {
+          password: "1",
+          balance: 13300000
+        }
+      };
+
+      let currentUser = "Minhduc1";
+      let verifiedUid = null;
+
+      let selectedPkg = {
+        id: "kc-230",
+        name: "230 Kim Cương",
+        diamonds: 230,
+        bonus: 23,
+        price: 55000
+      };
+
+      // DOM elements
+      const headerBalanceText = document.getElementById("headerBalanceText");
+      const headerAccountName = document.getElementById("headerAccountName");
+      const accountDot = document.getElementById("accountDot");
+      const logoutOrLoginBtn = document.getElementById("logoutOrLoginBtn");
+      const accountChipBtn = document.getElementById("accountChipBtn");
+
+      const idInputRow = document.getElementById("idInputRow");
+      const playerIdInput = document.getElementById("playerIdInput");
+      const fillSampleBtn = document.getElementById("fillSampleBtn");
+      const checkIdBtn = document.getElementById("checkIdBtn");
+
+      const playerVerifiedCard = document.getElementById("playerVerifiedCard");
+      const verifiedUidDisplay = document.getElementById("verifiedUidDisplay");
+      const changeIdBtn = document.getElementById("changeIdBtn");
+
+      const idStatusBox = document.getElementById("idStatusBox");
+      const statusDot = document.getElementById("statusDot");
+      const statusText = document.getElementById("statusText");
+
+      const inlineBalanceVal = document.getElementById("inlineBalanceVal");
+      const balanceStatusBadge = document.getElementById("balanceStatusBadge");
+
+      const pkgCards = Array.from(document.querySelectorAll(".pkg-card"));
+
+      const summaryAccount = document.getElementById("summaryAccount");
+      const summaryBalance = document.getElementById("summaryBalance");
+      const summaryUid = document.getElementById("summaryUid");
+      const summaryPkg = document.getElementById("summaryPkg");
+      const summaryBonus = document.getElementById("summaryBonus");
+      const summaryTotal = document.getElementById("summaryTotal");
+      const confirmTopupBtn = document.getElementById("confirmTopupBtn");
+
+      // Modals
+      const receiptModal = document.getElementById("receiptModal");
+      const receiptDetails = document.getElementById("receiptDetails");
+      const closeReceiptBtn = document.getElementById("closeReceiptBtn");
+      const doneReceiptBtn = document.getElementById("doneReceiptBtn");
+
+      const topupModal = document.getElementById("topupModal");
+      const openTopupBtn = document.getElementById("openTopupBtn");
+      const closeTopupBtn = document.getElementById("closeTopupBtn");
+      const topupTargetAccount = document.getElementById("topupTargetAccount");
+
+      const loginModal = document.getElementById("loginModal");
+      const closeLoginBtn = document.getElementById("closeLoginBtn");
+      const loginForm = document.getElementById("loginForm");
+      const loginUserInput = document.getElementById("loginUserInput");
+      const loginPassInput = document.getElementById("loginPassInput");
+      const loginError = document.getElementById("loginError");
+
+      function formatVND(num) {
+        return Number(num || 0).toLocaleString("vi-VN") + "đ";
+      }
+
+      function showToast(message, type) {
+        const container = document.getElementById("toastContainer");
+        if (!container) return;
+        const toast = document.createElement("div");
+        toast.className = "toast " + (type || "success");
+        toast.textContent = message;
+        container.appendChild(toast);
+        setTimeout(function () {
+          toast.style.opacity = "0";
+          toast.style.transition = "opacity 0.2s ease";
+          setTimeout(function () {
+            if (toast.parentNode) {
+              toast.parentNode.removeChild(toast);
+            }
+          }, 200);
+        }, 2500);
+      }
+
+      function getCurrentBalance() {
+        if (!currentUser || !accounts[currentUser]) return 0;
+        return accounts[currentUser].balance;
+      }
+
+      function setIdStatus(mode, message) {
+        statusDot.className = "status-dot";
+        if (mode === "verified") statusDot.classList.add("verified");
+        if (mode === "error") statusDot.classList.add("error");
+        statusText.textContent = message;
+      }
+
+      function updatePlayerCardUI() {
+        if (verifiedUid) {
+          idInputRow.style.display = "none";
+          playerVerifiedCard.classList.add("active");
+          verifiedUidDisplay.textContent = verifiedUid;
+          idStatusBox.classList.add("hidden");
+        } else {
+          playerVerifiedCard.classList.remove("active");
+          idInputRow.style.display = "flex";
+          idStatusBox.classList.remove("hidden");
+        }
+      }
+
+      function refreshAccountAndBalanceUI() {
+        const loggedIn = Boolean(currentUser && accounts[currentUser]);
+        const bal = getCurrentBalance();
+        const enough = loggedIn && bal >= selectedPkg.price;
+
+        headerAccountName.textContent = loggedIn ? currentUser : "Chưa đăng nhập";
+        accountDot.style.background = loggedIn ? "var(--success)" : "var(--text-muted)";
+        accountDot.style.boxShadow = loggedIn ? "0 0 6px rgba(16, 185, 129, 0.8)" : "none";
+        logoutOrLoginBtn.textContent = loggedIn ? "Đăng xuất" : "Đăng nhập";
+
+        headerBalanceText.textContent = formatVND(bal);
+        inlineBalanceVal.textContent = formatVND(bal);
+        summaryAccount.textContent = loggedIn ? currentUser : "Chưa đăng nhập";
+        summaryBalance.textContent = formatVND(bal);
+        topupTargetAccount.textContent = loggedIn ? currentUser : "Tài khoản mới";
+
+        if (!loggedIn) {
+          balanceStatusBadge.className = "balance-badge low";
+          balanceStatusBadge.textContent = "Chưa đăng nhập";
+        } else if (enough) {
+          balanceStatusBadge.className = "balance-badge ok";
+          balanceStatusBadge.textContent = "Đủ số dư";
+        } else {
+          balanceStatusBadge.className = "balance-badge low";
+          balanceStatusBadge.textContent = "Không đủ";
+        }
+      }
+
+      function refreshSummaryUI() {
+        const activeUid = verifiedUid || playerIdInput.value.trim();
+        summaryUid.textContent = activeUid || "Chưa nhập";
+
+        summaryPkg.textContent = selectedPkg.name;
+        if (selectedPkg.bonus > 0) {
+          summaryBonus.textContent = "+" + selectedPkg.bonus + " KC";
+          summaryBonus.className = "val highlight";
+        } else if (selectedPkg.id === "pass-week") {
+          summaryBonus.textContent = "450 KC / 7 ngày";
+          summaryBonus.className = "val";
+        } else {
+          summaryBonus.textContent = "2.600 KC / 30 ngày";
+          summaryBonus.className = "val";
+        }
+
+        summaryTotal.textContent = formatVND(selectedPkg.price);
+        updatePlayerCardUI();
+        refreshAccountAndBalanceUI();
+      }
+
+      function verifyPlayerId(uid) {
+        if (!/^\d{6,14}$/.test(uid)) {
+          verifiedUid = null;
+          setIdStatus("error", "ID phải gồm 6 - 14 chữ số");
+          showToast("Vui lòng nhập UID hợp lệ (6 - 14 chữ số)", "error");
+          refreshSummaryUI();
+          return false;
+        }
+
+        verifiedUid = uid;
+        setIdStatus("verified", "Đã xác nhận ID: " + uid);
+        refreshSummaryUI();
+        showToast("Đã xác nhận ID: " + uid, "success");
+        return true;
+      }
+
+      // Sample ID fill
+      fillSampleBtn.addEventListener("click", function () {
+        const picked = SAMPLE_UIDS[Math.floor(Math.random() * SAMPLE_UIDS.length)];
+        playerIdInput.value = picked;
+        verifiedUid = null;
+        setIdStatus("idle", "Đã điền ID mẫu, nhấn Xác nhận ID");
+        refreshSummaryUI();
+      });
+
+      // Restrict UID input to digits
+      playerIdInput.addEventListener("input", function () {
+        this.value = this.value.replace(/\D/g, "");
+        refreshSummaryUI();
+      });
+
+      // Check ID / Confirm UID
+      checkIdBtn.addEventListener("click", function () {
+        const uid = playerIdInput.value.trim();
+        verifyPlayerId(uid);
+      });
+
+      playerIdInput.addEventListener("keydown", function (e) {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          const uid = playerIdInput.value.trim();
+          verifyPlayerId(uid);
+        }
+      });
+
+      // Change ID button
+      changeIdBtn.addEventListener("click", function () {
+        const prevUid = verifiedUid || "";
+        verifiedUid = null;
+        playerIdInput.value = prevUid;
+        setIdStatus("idle", "Nhập ID khác để đổi");
+        refreshSummaryUI();
+        playerIdInput.focus();
+      });
+
+      // Package selection
+      pkgCards.forEach(function (card) {
+        card.addEventListener("click", function () {
+          pkgCards.forEach(function (c) {
+            c.classList.remove("selected");
+          });
+          card.classList.add("selected");
+
+          selectedPkg = {
+            id: card.getAttribute("data-id"),
+            name: card.getAttribute("data-name"),
+            diamonds: Number(card.getAttribute("data-diamonds")),
+            bonus: Number(card.getAttribute("data-bonus")),
+            price: Number(card.getAttribute("data-price"))
+          };
+
+          refreshSummaryUI();
+        });
+      });
+
+      // Top-up wallet modal
+      openTopupBtn.addEventListener("click", function () {
+        if (!currentUser || !accounts[currentUser]) {
+          loginError.textContent = "Vui lòng đăng nhập để nạp thêm số dư.";
+          loginModal.classList.add("open");
+          return;
+        }
+        topupModal.classList.add("open");
+      });
+
+      closeTopupBtn.addEventListener("click", function () {
+        topupModal.classList.remove("open");
+      });
+
+      topupModal.addEventListener("click", function (e) {
+        if (e.target === topupModal) topupModal.classList.remove("open");
+      });
+
+      document.querySelectorAll(".preset-btn").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          if (!currentUser || !accounts[currentUser]) return;
+          const addAmt = Number(btn.getAttribute("data-add")) || 0;
+          accounts[currentUser].balance += addAmt;
+          refreshAccountAndBalanceUI();
+          topupModal.classList.remove("open");
+          showToast("Đã nạp thêm " + formatVND(addAmt) + " vào tài khoản", "success");
+        });
+      });
+
+      // Login / Logout modal
+      function openLoginDialog() {
+        loginError.textContent = "";
+        loginUserInput.value = currentUser || "";
+        loginPassInput.value = "";
+        loginModal.classList.add("open");
+        loginUserInput.focus();
+      }
+
+      logoutOrLoginBtn.addEventListener("click", function () {
+        if (currentUser && accounts[currentUser]) {
+          const prevUser = currentUser;
+          currentUser = null;
+          refreshAccountAndBalanceUI();
+          showToast("Đã đăng xuất khỏi tài khoản " + prevUser, "success");
+        } else {
+          openLoginDialog();
+        }
+      });
+
+      accountChipBtn.addEventListener("click", function () {
+        openLoginDialog();
+      });
+
+      closeLoginBtn.addEventListener("click", function () {
+        loginModal.classList.remove("open");
+      });
+
+      loginModal.addEventListener("click", function (e) {
+        if (e.target === loginModal) loginModal.classList.remove("open");
+      });
+
+      loginForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+        const uname = loginUserInput.value.trim();
+        const pass = loginPassInput.value;
+
+        if (!uname || !pass) {
+          loginError.textContent = "Vui lòng nhập đầy đủ tài khoản và mật khẩu.";
+          return;
+        }
+
+        if (accounts[uname]) {
+          if (accounts[uname].password !== pass) {
+            loginError.textContent = "Mật khẩu không chính xác cho tài khoản " + uname + ".";
+            return;
+          }
+          currentUser = uname;
+        } else {
+          accounts[uname] = {
+            password: pass,
+            balance: 0
+          };
+          currentUser = uname;
+        }
+
+        loginError.textContent = "";
+        loginModal.classList.remove("open");
+        refreshAccountAndBalanceUI();
+        showToast("Đăng nhập thành công: " + currentUser, "success");
+      });
+
+      // Confirm top-up order
+      confirmTopupBtn.addEventListener("click", function () {
+        if (!currentUser || !accounts[currentUser]) {
+          openLoginDialog();
+          return;
+        }
+
+        const uid = verifiedUid || playerIdInput.value.trim();
+        if (!/^\d{6,14}$/.test(uid)) {
+          verifiedUid = null;
+          updatePlayerCardUI();
+          setIdStatus("error", "Vui lòng nhập UID hợp lệ trước khi nạp");
+          showToast("Vui lòng nhập UID hợp lệ trước khi nạp", "error");
+          playerIdInput.focus();
+          return;
+        }
+
+        if (!verifiedUid || verifiedUid !== uid) {
+          if (!verifyPlayerId(uid)) return;
+        }
+
+        const currentBal = accounts[currentUser].balance;
+        if (currentBal < selectedPkg.price) {
+          showToast("Số dư không đủ (" + formatVND(currentBal) + "). Nhấn '+ Nạp thêm'!", "error");
+          return;
+        }
+
+        accounts[currentUser].balance -= selectedPkg.price;
+        const remainingBal = accounts[currentUser].balance;
+        const orderCode = "FF" + Math.floor(100000 + Math.random() * 900000);
+        const totalDiamonds = selectedPkg.diamonds + selectedPkg.bonus;
+
+        receiptDetails.innerHTML =
+          '<div class="receipt-item"><span>Mã giao dịch:</span><span>' + orderCode + '</span></div>' +
+          '<div class="receipt-item"><span>Tài khoản ví:</span><span>' + currentUser + '</span></div>' +
+          '<div class="receipt-item"><span>ID Player:</span><span>' + verifiedUid + '</span></div>' +
+          '<div class="receipt-item"><span>Gói nạp:</span><span>' + selectedPkg.name + '</span></div>' +
+          '<div class="receipt-item"><span>Tổng nhận:</span><span style="color:#34d399;">' + totalDiamonds.toLocaleString("vi-VN") + ' KC</span></div>' +
+          '<div class="receipt-item"><span>Đã trừ:</span><span style="color:#FFB800;">' + formatVND(selectedPkg.price) + '</span></div>' +
+          '<div class="receipt-item"><span>Số dư còn lại:</span><span style="color:#FFB800;">' + formatVND(remainingBal) + '</span></div>';
+
+        refreshAccountAndBalanceUI();
+        receiptModal.classList.add("open");
+        showToast("Nạp Kim Cương thành công!", "success");
+      });
+
+      function closeReceipt() {
+        receiptModal.classList.remove("open");
+      }
+
+      closeReceiptBtn.addEventListener("click", closeReceipt);
+      doneReceiptBtn.addEventListener("click", closeReceipt);
+      receiptModal.addEventListener("click", function (e) {
+        if (e.target === receiptModal) closeReceipt();
+      });
+
+      refreshSummaryUI();
+    })();
+  </script>
+</body>
+</html>
